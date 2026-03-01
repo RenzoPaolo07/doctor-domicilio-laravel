@@ -23,7 +23,6 @@ class Consentimiento extends Model
         'fecha' => 'date',
     ];
 
-    // RELACIONES
     public function paciente()
     {
         return $this->belongsTo(Paciente::class);

@@ -142,7 +142,7 @@
                                 <i class="fas fa-clock"></i> Últimos pacientes
                             </div>
                             @forelse($ultimosPacientes as $p)
-                                <a href="{{ route('laboratorio.orden.create', $p->id) }}" class="dropdown-item">
+                                <a href="{{ route('laboratorio.create', $p->id) }}" class="dropdown-item">  <!-- CAMBIADO: 'orden.create' → 'create' -->
                                     <i class="fas fa-user-circle"></i>
                                     {{ $p->nombre }} {{ $p->apellido }}
                                 </a>

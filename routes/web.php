@@ -113,22 +113,25 @@ Route::middleware(['auth'])->prefix('laboratorio')->name('laboratorio.')->group(
     Route::get('/', [LaboratorioController::class, 'index'])->name('index');
     
     Route::get('/orden/crear/{paciente}', [LaboratorioController::class, 'createOrden'])
-        ->name('orden.create');
+        ->name('create');
     
     Route::post('/orden', [LaboratorioController::class, 'storeOrden'])
-        ->name('orden.store');
+        ->name('store');
     
     Route::get('/orden/{orden}', [LaboratorioController::class, 'showOrden'])
-        ->name('orden.show');
+        ->name('show');
     
-    Route::get('/orden/{orden}/resultados', [LaboratorioController::class, 'uploadResultados'])
-        ->name('orden.upload');
+    Route::get('/orden/{orden}/upload', [LaboratorioController::class, 'uploadResultados'])
+        ->name('upload');
     
-    Route::post('/orden/{orden}/resultados', [LaboratorioController::class, 'storeResultados'])
-        ->name('orden.storeResultados');
+    Route::post('/orden/{orden}/upload', [LaboratorioController::class, 'storeResultados'])
+        ->name('storeResultados');
     
-    Route::get('/orden/{orden}/pdf', [LaboratorioController::class, 'pdf'])
-        ->name('orden.pdf');
+    Route::get('/orden/{orden}/download', [LaboratorioController::class, 'downloadResultados'])
+        ->name('download');
+    
+    Route::delete('/orden/{orden}', [LaboratorioController::class, 'destroy'])
+        ->name('destroy');
 });
 
 // ===== MÓDULO DE CONSENTIMIENTOS =====

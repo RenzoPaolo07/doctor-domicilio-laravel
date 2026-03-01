@@ -24,7 +24,6 @@ class OrdenLaboratorio extends Model
         'fecha_orden' => 'date',
     ];
 
-    // RELACIONES
     public function paciente()
     {
         return $this->belongsTo(Paciente::class);
