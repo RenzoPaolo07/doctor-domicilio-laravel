@@ -2,31 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Paciente;
 use App\Models\HistoriaClinica;
 use App\Models\Receta;
+use App\Models\Boleta;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Estadísticas para el dashboard
+        // Estadísticas principales
         $totalPacientes = Paciente::count();
         $hombres = Paciente::where('genero', 'M')->count();
         $mujeres = Paciente::where('genero', 'F')->count();
         $adultosMayores = Paciente::whereRaw('TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) >= 60')->count();
         
-        // Últimos pacientes registrados
+        // Últimos pacientes
         $ultimosPacientes = Paciente::orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
         
-        // Próximas citas (historias con próxima_cita en el futuro)
+        // Próximas citas
         $proximasCitas = HistoriaClinica::with('paciente')
+            ->whereNotNull('proxima_cita')
             ->where('proxima_cita', '>=', now())
-            ->orderBy('proxima_cita', 'asc')
+            ->orderBy('proxima_cita')
             ->limit(5)
             ->get();
         
@@ -36,6 +38,35 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
         
+        // Estadísticas financieras del mes
+        $ingresosMes = Boleta::where('estado', 'pagado')
+            ->whereMonth('fecha', now()->month)
+            ->whereYear('fecha', now()->year)
+            ->sum('monto');
+        
+        $boletasPendientes = Boleta::where('estado', 'pendiente')->count();
+        
+        // Gráfico de pacientes por edad
+        $edades = Paciente::select(DB::raw('
+            CASE 
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 18 THEN "Niños"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 18 AND 30 THEN "Jóvenes"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 31 AND 50 THEN "Adultos"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 51 AND 65 THEN "Adultos Mayores"
+                ELSE "Tercera Edad"
+            END as rango,
+            COUNT(*) as total
+        '))
+        ->whereNotNull('fecha_nacimiento')
+        ->groupBy('rango')
+        ->get();
+        
+        // Pacientes por tipo de sangre
+        $sangre = Paciente::select('tipo_sangre', DB::raw('count(*) as total'))
+            ->whereNotNull('tipo_sangre')
+            ->groupBy('tipo_sangre')
+            ->get();
+        
         return view('dashboard', compact(
             'totalPacientes',
             'hombres',
@@ -43,7 +74,11 @@ class DashboardController extends Controller
             'adultosMayores',
             'ultimosPacientes',
             'proximasCitas',
-            'actividadReciente'
+            'actividadReciente',
+            'ingresosMes',
+            'boletasPendientes',
+            'edades',
+            'sangre'
         ));
     }
 }

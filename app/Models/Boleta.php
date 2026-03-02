@@ -16,7 +16,9 @@ class Boleta extends Model
         'fecha',
         'monto',
         'concepto',
-        'numero_boleta'
+        'numero_boleta',
+        'metodo_pago',
+        'estado'
     ];
 
     protected $casts = [
@@ -24,7 +26,6 @@ class Boleta extends Model
         'monto' => 'decimal:2',
     ];
 
-    // RELACIONES
     public function paciente()
     {
         return $this->belongsTo(Paciente::class);

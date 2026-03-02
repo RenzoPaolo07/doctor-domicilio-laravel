@@ -11,18 +11,17 @@ class AdminUserSeeder extends Seeder
 {
     public function run(): void
     {
+        // Eliminar usuario existente si hay
+        User::where('email', 'dr.alex@clinica.com')->delete();
+        
+        // Crear usuario con contraseña hasheada
         User::create([
             'nombre' => 'Dr. Alex',
             'email' => 'dr.alex@clinica.com',
             'password' => Hash::make('admin123'),
             'rol' => 'admin',
         ]);
-
-        User::create([
-            'nombre' => 'Dr. Asistente',
-            'email' => 'asistente@clinica.com',
-            'password' => Hash::make('admin123'),
-            'rol' => 'asistente',
-        ]);
+        
+        $this->command->info('Usuario admin creado exitosamente!');
     }
 }
