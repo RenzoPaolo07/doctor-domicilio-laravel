@@ -191,5 +191,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// ===== EXPORTACIONES =====
+Route::prefix('exportar')->name('exportar.')->group(function () {
+    Route::get('/pacientes/excel', [App\Http\Controllers\ExportController::class, 'pacientesExcel'])->name('pacientes.excel');
+    Route::get('/pacientes/pdf', [App\Http\Controllers\ExportController::class, 'pacientesPdf'])->name('pacientes.pdf');
+    Route::get('/citas/excel', [App\Http\Controllers\ExportController::class, 'citasExcel'])->name('citas.excel');
+    Route::get('/boletas/excel', [App\Http\Controllers\ExportController::class, 'boletasExcel'])->name('boletas.excel');
+});
+
+// ===== AUDITORÍA =====
+Route::middleware(['auth'])->prefix('auditoria')->name('auditoria.')->group(function () {
+    Route::get('/', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('index');
+    Route::get('/{id}', [App\Http\Controllers\AuditoriaController::class, 'show'])->name('show');
+});
+
+// ===== CONFIGURACIONES =====
+Route::middleware(['auth'])->prefix('configuraciones')->name('configuraciones.')->group(function () {
+    Route::get('/', [App\Http\Controllers\ConfiguracionController::class, 'index'])->name('index');
+    Route::post('/', [App\Http\Controllers\ConfiguracionController::class, 'update'])->name('update');
+    Route::post('/reset', [App\Http\Controllers\ConfiguracionController::class, 'reset'])->name('reset');
+});
+
 // ===== RUTAS DE AUTENTICACIÓN (Breeze) =====
 require __DIR__.'/auth.php';

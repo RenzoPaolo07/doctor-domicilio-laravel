@@ -44,6 +44,16 @@
     </div>
     
     <div class="toolbar-actions">
+        <!-- BOTONES DE EXPORTACIÓN AGREGADOS -->
+        <div class="btn-group" style="display: flex; gap: 5px; margin-right: 10px;">
+            <a href="{{ route('exportar.pacientes.excel') }}" class="btn-view" title="Exportar a Excel">
+                <i class="fas fa-file-excel" style="color: #28a745;"></i>
+            </a>
+            <a href="{{ route('exportar.pacientes.pdf') }}" class="btn-view" title="Exportar a PDF">
+                <i class="fas fa-file-pdf" style="color: #dc3545;"></i>
+            </a>
+        </div>
+        
         <div class="view-toggle">
             <button class="btn-view active" data-view="grid">
                 <i class="fas fa-th-large"></i>
