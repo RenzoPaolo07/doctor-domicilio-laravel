@@ -46,14 +46,14 @@ class DashboardController extends Controller
         
         $boletasPendientes = Boleta::where('estado', 'pendiente')->count();
         
-        // Gráfico de pacientes por edad
+        // 📊 GRÁFICO 1: Pacientes por rango de edades
         $edades = Paciente::select(DB::raw('
             CASE 
-                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 18 THEN "Niños"
-                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 18 AND 30 THEN "Jóvenes"
-                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 31 AND 50 THEN "Adultos"
-                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 51 AND 65 THEN "Adultos Mayores"
-                ELSE "Tercera Edad"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) < 18 THEN "0-17 años (Niños)"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 18 AND 30 THEN "18-30 años (Jóvenes)"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 31 AND 50 THEN "31-50 años (Adultos)"
+                WHEN TIMESTAMPDIFF(YEAR, fecha_nacimiento, CURDATE()) BETWEEN 51 AND 65 THEN "51-65 años (Adultos Mayores)"
+                ELSE "65+ años (Tercera Edad)"
             END as rango,
             COUNT(*) as total
         '))
@@ -61,11 +61,37 @@ class DashboardController extends Controller
         ->groupBy('rango')
         ->get();
         
-        // Pacientes por tipo de sangre
+        // Si no hay datos, crear datos de ejemplo para mostrar el gráfico
+        if ($edades->isEmpty()) {
+            $edades = collect([
+                (object) ['rango' => '0-17 años (Niños)', 'total' => 0],
+                (object) ['rango' => '18-30 años (Jóvenes)', 'total' => 0],
+                (object) ['rango' => '31-50 años (Adultos)', 'total' => 0],
+                (object) ['rango' => '51-65 años (Adultos Mayores)', 'total' => 0],
+                (object) ['rango' => '65+ años (Tercera Edad)', 'total' => 0],
+            ]);
+        }
+        
+        // 📊 GRÁFICO 2: Pacientes por tipo de sangre
         $sangre = Paciente::select('tipo_sangre', DB::raw('count(*) as total'))
             ->whereNotNull('tipo_sangre')
+            ->where('tipo_sangre', '!=', '')
             ->groupBy('tipo_sangre')
             ->get();
+        
+        // Si no hay datos, crear datos de ejemplo
+        if ($sangre->isEmpty()) {
+            $sangre = collect([
+                (object) ['tipo_sangre' => 'A+', 'total' => 0],
+                (object) ['tipo_sangre' => 'A-', 'total' => 0],
+                (object) ['tipo_sangre' => 'B+', 'total' => 0],
+                (object) ['tipo_sangre' => 'B-', 'total' => 0],
+                (object) ['tipo_sangre' => 'O+', 'total' => 0],
+                (object) ['tipo_sangre' => 'O-', 'total' => 0],
+                (object) ['tipo_sangre' => 'AB+', 'total' => 0],
+                (object) ['tipo_sangre' => 'AB-', 'total' => 0],
+            ]);
+        }
         
         return view('dashboard', compact(
             'totalPacientes',

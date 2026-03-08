@@ -206,6 +206,10 @@ Route::middleware(['auth'])->prefix('auditoria')->name('auditoria.')->group(func
     Route::get('/{id}', [App\Http\Controllers\AuditoriaController::class, 'show'])->name('show');
 });
 
+Route::get('/historias-test/{id}', function($id) {
+    return "Historia ID: " . $id;
+})->name('historias.test');
+
 // ===== CONFIGURACIONES =====
 Route::middleware(['auth'])->prefix('configuraciones')->name('configuraciones.')->group(function () {
     Route::get('/', [App\Http\Controllers\ConfiguracionController::class, 'index'])->name('index');

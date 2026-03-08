@@ -24,7 +24,6 @@ class Vacuna extends Model
         'fecha_aplicacion' => 'date',
     ];
 
-    // RELACIONES
     public function historiaPediatrica()
     {
         return $this->belongsTo(HistoriaPediatrica::class);

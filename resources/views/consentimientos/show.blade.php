@@ -46,7 +46,7 @@
 
             <div class="detalle-acciones" style="margin-top: 30px;">
                 <a href="{{ route('historias.index', $consentimiento->paciente->id) }}" class="btn-cancel">
-                    <i class="fas fa-arrow-left"></i> Volver a Historias
+                    <i class="fas fa-arrow-left"></i> Volver
                 </a>
             </div>
         </div>

@@ -5,18 +5,18 @@
     <title>Boleta {{ $boleta->numero_boleta }}</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Helvetica', Arial, sans-serif;
             margin: 1.5cm;
             color: #333;
         }
         .header {
             text-align: center;
             margin-bottom: 30px;
-            border-bottom: 2px solid #4a69bd;
+            border-bottom: 4px solid #1a365d;
             padding-bottom: 20px;
         }
         .header h1 {
-            color: #4a69bd;
+            color: #1a365d;
             margin-bottom: 5px;
             font-size: 28px;
         }
@@ -36,7 +36,7 @@
             width: 48%;
         }
         .paciente-info h3, .boleta-info h3 {
-            color: #4a69bd;
+            color: #1a365d;
             margin-bottom: 15px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 5px;
@@ -52,12 +52,12 @@
         .concepto-box {
             margin: 30px 0;
             padding: 20px;
-            background: #fff3cd;
-            border-left: 5px solid #ffc107;
+            background: #f8f9fa;
+            border-left: 5px solid #1a365d;
             border-radius: 5px;
         }
         .concepto-box h3 {
-            color: #856404;
+            color: #1a365d;
             margin-bottom: 10px;
         }
         .monto-box {
@@ -109,21 +109,21 @@
     <div class="header">
         <h1>Doctor Domicilio</h1>
         <h3>Boleta de Venta Electrónica</h3>
-        <h2 style="color: #4a69bd;">{{ $boleta->numero_boleta }}</h2>
+        <h2 style="color: #1a365d;">{{ $boleta->numero_boleta }}</h2>
     </div>
 
     <div class="info-box">
         <div class="paciente-info">
             <h3>Datos del Paciente</h3>
             <div class="info-row"><strong>Nombre:</strong> {{ $boleta->paciente->nombre_completo }}</div>
-            <div class="info-row"><strong>Documento:</strong> {{ $boleta->paciente->email ?? 'N/E' }}</div>
+            <div class="info-row"><strong>Email:</strong> {{ $boleta->paciente->email ?? 'N/E' }}</div>
             <div class="info-row"><strong>Teléfono:</strong> {{ $boleta->paciente->telefono ?? 'N/E' }}</div>
         </div>
         
         <div class="boleta-info">
             <h3>Datos de la Boleta</h3>
             <div class="info-row"><strong>Fecha:</strong> {{ $boleta->fecha->format('d/m/Y') }}</div>
-            <div class="info-row"><strong>Método Pago:</strong> {{ ucfirst($boleta->metodo_pago) }}</div>
+            <div class="info-row"><strong>Método Pago:</strong> {{ ucfirst($boleta->metodo_pago ?? 'N/E') }}</div>
             <div class="info-row">
                 <strong>Estado:</strong> 
                 @if($boleta->estado == 'pagado')

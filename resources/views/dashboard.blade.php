@@ -58,7 +58,10 @@
             <h3><i class="fas fa-chart-pie"></i> Pacientes por Edad</h3>
         </div>
         <div class="card-body">
-            <canvas id="graficoEdad" style="height: 250px;"></canvas>
+            <canvas id="graficoEdad" style="height: 250px; width: 100%;"></canvas>
+            @if($edades->sum('total') == 0)
+                <p class="text-muted text-center mt-3">No hay datos suficientes para mostrar el gráfico</p>
+            @endif
         </div>
     </div>
     
@@ -67,7 +70,10 @@
             <h3><i class="fas fa-tint"></i> Tipo de Sangre</h3>
         </div>
         <div class="card-body">
-            <canvas id="graficoSangre" style="height: 250px;"></canvas>
+            <canvas id="graficoSangre" style="height: 250px; width: 100%;"></canvas>
+            @if($sangre->sum('total') == 0)
+                <p class="text-muted text-center mt-3">No hay datos suficientes para mostrar el gráfico</p>
+            @endif
         </div>
     </div>
 </div>
@@ -160,45 +166,88 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.js"></script>
 <script>
-// Gráfico de edades
-const ctxEdad = document.getElementById('graficoEdad').getContext('2d');
-new Chart(ctxEdad, {
-    type: 'pie',
-    data: {
-        labels: {!! json_encode($edades->pluck('rango')) !!},
-        datasets: [{
-            data: {!! json_encode($edades->pluck('total')) !!},
-            backgroundColor: [
-                '#667eea',
-                '#f093fb',
-                '#4facfe',
-                '#43e97b',
-                '#fa709a'
-            ]
-        }]
-    }
-});
-
-// Gráfico de tipos de sangre
-const ctxSangre = document.getElementById('graficoSangre').getContext('2d');
-new Chart(ctxSangre, {
-    type: 'bar',
-    data: {
-        labels: {!! json_encode($sangre->pluck('tipo_sangre')) !!},
-        datasets: [{
-            label: 'Pacientes',
-            data: {!! json_encode($sangre->pluck('total')) !!},
-            backgroundColor: '#4a69bd'
-        }]
-    },
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true,
-                stepSize: 1
+document.addEventListener('DOMContentLoaded', function() {
+    // Gráfico de edades
+    const ctxEdad = document.getElementById('graficoEdad').getContext('2d');
+    
+    const edadesData = @json($edades);
+    const edadesLabels = edadesData.map(item => item.rango);
+    const edadesValues = edadesData.map(item => item.total);
+    
+    new Chart(ctxEdad, {
+        type: 'pie',
+        data: {
+            labels: edadesLabels,
+            datasets: [{
+                data: edadesValues,
+                backgroundColor: [
+                    '#667eea',
+                    '#f093fb',
+                    '#4facfe',
+                    '#43e97b',
+                    '#fa709a'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            size: 10
+                        }
+                    }
+                }
             }
         }
-    }
+    });
+
+    // Gráfico de tipos de sangre
+    const ctxSangre = document.getElementById('graficoSangre').getContext('2d');
+    
+    const sangreData = @json($sangre);
+    const sangreLabels = sangreData.map(item => item.tipo_sangre || 'N/E');
+    const sangreValues = sangreData.map(item => item.total);
+    
+    new Chart(ctxSangre, {
+        type: 'bar',
+        data: {
+            labels: sangreLabels,
+            datasets: [{
+                label: 'Cantidad de Pacientes',
+                data: sangreValues,
+                backgroundColor: '#4a69bd',
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    stepSize: 1,
+                    grid: {
+                        color: 'rgba(0,0,0,0.05)'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
 });
 </script>
 @endpush

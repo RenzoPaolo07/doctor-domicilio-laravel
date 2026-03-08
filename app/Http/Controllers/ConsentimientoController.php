@@ -31,7 +31,6 @@ class ConsentimientoController extends Controller
             'fecha' => 'required|date',
             'procedimiento' => 'required|string',
             'firma_digital' => 'required|string',
-            'testigos' => 'nullable|string',
         ]);
 
         Consentimiento::create([
@@ -56,7 +55,7 @@ class ConsentimientoController extends Controller
     {
         $consentimiento = Consentimiento::with('paciente')->findOrFail($id);
         
-        $pdf = PDF::loadView('consentimientos.pdf', compact('consentimiento'));
+        $pdf = Pdf::loadView('consentimientos.pdf', compact('consentimiento'));
         
         return $pdf->download('consentimiento-' . $consentimiento->id . '.pdf');
     }

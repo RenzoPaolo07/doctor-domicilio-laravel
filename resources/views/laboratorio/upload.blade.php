@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('page-title', 'Subir Resultados')
-@section('title', 'Resultados de Laboratorio')
+@section('title', 'Subir Resultados de Laboratorio')
 
 @section('content')
 <div class="form-container">
