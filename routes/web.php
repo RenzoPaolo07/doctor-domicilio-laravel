@@ -169,19 +169,20 @@ Route::middleware(['auth'])->prefix('boletas')->name('boletas.')->group(function
 // ===== MÓDULO DE CALENDARIO =====
 Route::middleware(['auth'])->prefix('calendario')->name('calendario.')->group(function () {
     
-    Route::get('/', [CalendarioController::class, 'index'])->name('index');
+    Route::get('/', [App\Http\Controllers\CalendarioController::class, 'index'])
+        ->name('index');
     
-    Route::get('/eventos', [CalendarioController::class, 'eventos'])
+    Route::get('/eventos', [App\Http\Controllers\CalendarioController::class, 'eventos'])
         ->name('eventos');
     
-    Route::post('/eventos', [CalendarioController::class, 'store'])
-        ->name('eventos.store');
+    Route::post('/eventos', [App\Http\Controllers\CalendarioController::class, 'store'])
+        ->name('store');
     
-    Route::put('/eventos/{evento}', [CalendarioController::class, 'update'])
-        ->name('eventos.update');
+    Route::put('/eventos/{evento}', [App\Http\Controllers\CalendarioController::class, 'update'])
+        ->name('update');
     
-    Route::delete('/eventos/{evento}', [CalendarioController::class, 'destroy'])
-        ->name('eventos.destroy');
+    Route::delete('/eventos/{evento}', [App\Http\Controllers\CalendarioController::class, 'destroy'])
+        ->name('destroy');
 });
 
 // ===== PERFIL DE USUARIO (Breeze) =====
